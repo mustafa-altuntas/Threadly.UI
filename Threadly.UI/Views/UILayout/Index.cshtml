@@ -1,0 +1,54 @@
+﻿@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    @await Component.InvokeAsync("Header")
+
+    @await RenderSectionAsync("Header", required: false)
+
+
+</head>
+
+<body>
+    <div id="app">
+
+        @* @await Component.InvokeAsync("Sidebar") *@
+
+        <div class="container">
+
+
+            @await Component.InvokeAsync("NavBarVC")
+
+
+            <div class="page-content">
+
+                @RenderBody()
+
+            </div>
+
+            @await Component.InvokeAsync("Footer")
+
+
+
+        </div>
+    </div>
+
+
+    @await Component.InvokeAsync("ScriptVC")
+
+
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+
+
+</body>
+
+</html>

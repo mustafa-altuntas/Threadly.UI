@@ -1,0 +1,142 @@
+﻿@using Threadly.UI.Models.ViewModels;
+@model PostDeneme
+@{
+    ViewData["Title"] = "Editor";
+    Layout = "~/Views/UILayout/Index.cshtml";
+}
+
+
+
+
+
+@section Header {
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+
+
+}
+
+@section Scripts {
+
+
+    <script>
+
+
+
+
+        const quill = new Quill('#editor', {
+            bounds: "#full-container .editor",
+            modules: {
+                toolbar: [
+                    [{ font: [] }, { size: [] }],
+                    ["bold", "italic", "underline", "strike"],
+                    [
+                        { color: [] },
+                        { background: [] }
+                    ],
+                    [
+                        { script: "super" },
+                        { script: "sub" }
+                    ],
+                    [
+                        { list: "ordered" },
+                        { list: "bullet" },
+                        { indent: "-1" },
+                        { indent: "+1" }
+                    ],
+                    ["direction", { align: [] }],
+                    ["link", "image", "video"],
+                    ["clean"]]
+            },
+            theme: "snow"
+        });
+
+
+
+
+
+
+    </script>
+
+}
+
+
+
+
+    <section class="row">
+        <div class="col-12 col-lg-10">
+
+
+
+        
+
+            @* Text Editor *@
+            <section class="section">
+                <div class="card ">
+
+                    <div class="card-header">
+                        <h4 class="card-title">Full Editor !!!</h4>
+                    </div>
+
+                    <div class="card-body">
+
+                    <form   method="post">
+                        <div class="form-group">
+                            <label for="Ad">Ad</label>
+                            <input asp-for="Ad"  />
+                        </div>
+                        <div class="form-group">
+                            <label for="Soyad">Soyad</label>
+                            <input asp-for="Soyad"   />
+                        </div>
+                        <div class="form-group">
+                            <label for="Content">İçerik</label>
+
+                            <div id="editor"  ></div>
+
+                            <textarea asp-for="Content"  hidden>  </textarea>
+                        </div>
+                        <button type="submit">Gönder</button>
+                    </form>
+
+
+ <br /> 
+ <br /> 
+
+
+
+
+
+
+
+                    </div>
+
+
+
+                </div>
+            </section>
+
+
+        <script>
+
+            // Form gönderilmeden önce içerik verisini textarea'ya aktar
+            document.querySelector('form').onsubmit = function () {
+                document.querySelector('#Content').value = quill.root.innerHTML;
+        </script>
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,97 @@
+﻿@model CommunityCreateVM
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/UILayout/Index.cshtml";
+}
+
+
+
+@section Header {
+
+    <link rel="stylesheet" href="~/mazer/dist/assets/vendors/toastify/toastify.css">
+
+}
+@section Scripts {
+
+    <!-- toastify -->
+    <script src="~/mazer/dist/assets/vendors/toastify/toastify.js"></script>
+
+}
+
+
+
+<section id="basic-vertical-layouts">
+    <div class="row match-height">
+
+        <div class="col-md-6 col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Topluluk Oluştur</h4>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <form method="post" class="form form-vertical" enctype="multipart/form-data">
+                            <div class="form-body">
+                                <div class="row">
+
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label asp-for="Name"></label>
+                                            <input asp-for="Name" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label asp-for="Description"></label>
+                                            <input asp-for="Description" class="form-control">
+                                        </div>
+                                    </div>
+@* 
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <input asp-for="ImageUrl" hidden class="form-control">
+                                            <input asp-for="OwnerId" hidden class="form-control">
+                                        </div>
+                                    </div>
+ *@
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+
+
+
+                                            <!-- File uploader with image preview -->
+                                            <input asp-for="File" type="file" class="form-control">
+
+
+
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+
+
+
+
+
+
+

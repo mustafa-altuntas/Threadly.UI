@@ -1,0 +1,88 @@
+﻿<!-- Quill CSS -->
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+
+<!-- Quill JS -->
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+ 
+
+@model Threadly.UI.DTOs.Posts.CreatePost
+
+
+@{
+    if (TempData["Content"] != null)
+    {
+        ViewData["Content"]  = TempData["Content"];
+        ViewData["ActionUrl"] = TempData["ActionUrl"];
+    }
+}
+
+
+<section class="section">
+    <div class="card ">
+
+        <div class="card-header">
+            <h4 class="card-title">Full Editor !!!</h4>
+        </div>
+
+        <div class="card-body">
+            
+
+            <div id="editor-container" style="height: 300px;"></div>
+
+            <form method="post" action="@ViewData["ActionUrl"]">
+                <input hidden asp-for="quillContent" />
+                <button type="submit" class="btn btn-primary mt-3">Kaydet</button>
+            </form>
+
+
+        </div>
+
+    </div>
+</section>
+
+
+
+<script>
+    // Quill Editor'ü Başlat
+    var quill = new Quill('#editor-container', {
+        bounds: "#full-container .editor",
+        modules: {
+            toolbar: [
+                [{ font: [] }, { size: [] }],
+                ["bold", "italic", "underline", "strike"],
+                ['code-block'],
+                [
+                    { color: [] },
+                    { background: [] }
+                ],
+                [
+                    { script: "super" },
+                    { script: "sub" }
+                ],
+                [
+                    { list: "ordered" },
+                    { list: "bullet" },
+                    { indent: "-1" },
+                    { indent: "+1" }
+                ],
+                ["direction", { align: [] }],
+                ["link", "image", "video"],
+                ["clean"]]
+        },
+        theme: 'snow' // 'bubble' teması da kullanılabilir
+    });
+
+    // Mevcut içeriği HTML formatında eklemek için
+    var existingContent = `@Html.Raw(ViewData["Content"])`; // Mevcut makale içeriği
+    if (existingContent) {
+        quill.clipboard.dangerouslyPasteHTML(existingContent);
+    }
+
+    // Form Gönderiminden Önce İçeriği Sakla
+    document.querySelector('form').onsubmit = function () {
+        document.querySelector('#quillContent').value = quill.root.innerHTML;
+    };
+</script>
+
+
+

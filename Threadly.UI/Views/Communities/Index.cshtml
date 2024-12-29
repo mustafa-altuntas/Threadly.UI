@@ -1,0 +1,66 @@
+﻿@model List<CommunityVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/UILayout/Index.cshtml";
+}
+
+<section class="section">
+    <div class="row">
+        <div class="col-12 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    
+                        <a href="/Communities/Create" class="btn btn-primary">
+                        <i class="fa-regular fa-plus"></i> Topluluk Oluştur
+                    </a>
+
+                </div>
+
+
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+<section id="content-types">
+    <div class="row">
+
+
+        @foreach (var item in Model)
+        {
+
+            <div class="col-xl-4 col-md-6 col-sm-12">
+                <div class="card">
+                    <div class="card-content">
+                        <img src="@item.ImageUrl.ToFullImageUrl()" class="card-img-top img-fluid" alt="singleminded">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text">
+                                @item.Description
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
+        }
+
+
+
+
+
+    </div>
+</section>
+
+
+

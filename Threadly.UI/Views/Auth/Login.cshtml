@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/UILayout/Index.cshtml";
+}
+
+@model LoginUserVM
+
+
+
+@section Header {
+    <link rel="stylesheet" href="~/mazer/dist/assets/vendors/sweetalert2/sweetalert2.min.css">
+}
+@section Scripts {
+    <script src="~/mazer/dist/assets/vendors/sweetalert2/sweetalert2.all.min.js"></script>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: "success",
+                title: '@TempData["SuccessMessage"]',
+                confirmButtonText: 'Tamam'
+            })
+        </script>
+    })
+}
+
+
+
+
+
+
+<section id="basic-horizontal-layouts">
+    <div class="row match-height">
+        <div class="col-md-12 col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Horizontal Form</h4>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+
+                        <div class="col-md-6 col-12">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                            <form method="post" class="form form-horizontal">
+                                <div class="form-body">
+                                    <div class="row">
+
+
+                                        <div class="col-md-4">
+                                            <label asp-for="EmailOrUserName"></label>
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            <input asp-for="EmailOrUserName" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label asp-for="Password"></label>
+                                        </div>
+                                        <div class="col-md-8 form-group">
+                                            <input asp-for="Password" class="form-control">
+                                        </div>
+
+                                        <div class="col-sm-12 d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-primary me-1 mb-1 col-4">Giriş Yap</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
