@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Threadly.UI.DTOs.Posts;
+using Threadly.UI.Models.ViewModels.Post;
 
 namespace Threadly.UI.Controllers
 {
@@ -11,9 +11,9 @@ namespace Threadly.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePost(CreatePost createPost)
+        public async Task<IActionResult> CreatePost(CreatePostVM createPostVM)
         {
-            TempData["Content"] = createPost.quillContent;
+            TempData["Content"] = createPostVM.quillContent;
             TempData["ActionUrl"] = "/Posts/CreatePost";
 
             return RedirectToAction("Index", "Home");
