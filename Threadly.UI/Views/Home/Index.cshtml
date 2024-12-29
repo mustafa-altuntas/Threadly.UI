@@ -4,6 +4,44 @@
 }
 
 
+@section Header {
+        <link rel="stylesheet" href="~/mazer/dist/assets/vendors/toastify/toastify.css">
+
+}
+
+@section Scripts {
+    <script src="~/mazer/dist/assets/vendors/toastify/toastify.js"></script>
+
+
+    @if (TempData.ContainsKey("ToastifyMessage")){
+    
+        <script>
+            Toastify({
+                        text: `@ViewBag.ToastifyMessage`,
+                duration: 3000,
+                close:true,
+                gravity:"top",
+                position: "right",
+                backgroundColor: "#4fbe87",
+            }).showToast();
+        </script>
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <section class="row">
