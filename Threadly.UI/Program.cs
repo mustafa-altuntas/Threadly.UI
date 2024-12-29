@@ -1,4 +1,6 @@
 using Threadly.UI.Configurations;
+using Threadly.UI.HttpClients;
+using Threadly.UI.Middlewares;
 using Threadly.UI.Services.Abstracts;
 using Threadly.UI.Services.Concretes;
 
@@ -19,7 +21,11 @@ builder.Services.AddHttpClient<IApiService, ApiService>(client =>
     //client.DefaultRequestHeaders.Add("Authorization", "Bearer your_token_here");
     //client.DefaultRequestHeaders.Add("User-Agent", "MyApp/1.0"); // Bu baþlýk, istemcinin (örneðin, bir tarayýcý, uygulama veya API istemcisi) sunucuya kendini tanýtmasýný saðlar.
 
-});
+})
+    .AddHttpMessageHandler<BearerTokenHandler>();
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddTransient<BearerTokenHandler>();
 
 
 
@@ -51,6 +57,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseMiddleware<TokenMiddleware>();
+
 
 app.UseAuthorization();
 
