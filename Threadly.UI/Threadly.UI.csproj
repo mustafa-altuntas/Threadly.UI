@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\ViewModels\CommentVote\" />
+    <Folder Include="Middlewares\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
 
 </Project>
