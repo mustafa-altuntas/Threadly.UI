@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
+using Threadly.UI.DTOs.TokenDtos;
+using Threadly.UI.Models.ViewModels.TokenVM;
 using Threadly.UI.Models.ViewModels.Users;
 using Threadly.UI.Models.ViewModels.Users.LoginUser;
 using Threadly.UI.Services.Abstracts;
@@ -72,20 +74,10 @@ namespace Threadly.UI.Controllers
                 return View(loginUserVM);
             }
 
-            var result = await _apiService.PostAsync<LoginUserVM, LoginUserResult>("Users/LoginUser", loginUserVM);
+            var result = await _apiService.PostAsync<LoginUserVM, TokenResponse>("Users/LoginUser", loginUserVM);
 
-            //if (!result.Succeeded)
-            //{
-            //    ModelState.AddModelError(string.Empty, "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
-            //    return View(loginUserVM);
-            //}
-
-            // Giriş başarılı
-            //TempData["SuccessMessage"] = "Giriş başarılı. Hoş geldiniz!";
+            TempData["ToastifyMessage"] = "Kullanıcı başarıyla giriş yaptı!";
             return RedirectToAction("Index", "Home");
-
-
-
 
         }
     }
