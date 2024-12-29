@@ -49,18 +49,13 @@ namespace Threadly.UI.Services.Concretes
 
 
             var resposeContent = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<TResult>(resposeContent, new JsonSerializerOptions
+            var resutl  =  JsonSerializer.Deserialize<TResult>(resposeContent, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true, // property büyük/küçük harf uyumsuz
                 WriteIndented = true
             })!;
 
-
-            //var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
-            //var response = await _httpClient.PostAsync(endpoint, content);
-            //response.EnsureSuccessStatusCode();
-            //var responseContent = await response.Content.ReadAsStringAsync();
-            //return JsonSerializer.Deserialize<T>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return resutl;
 
         }
 
