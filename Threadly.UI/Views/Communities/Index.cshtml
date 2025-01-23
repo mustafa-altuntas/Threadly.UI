@@ -16,11 +16,7 @@
                     </a>
 
                 </div>
-
-
-
             </div>
-
         </div>
     </div>
 </section>
@@ -35,9 +31,13 @@
         {
 
             <div class="col-xl-4 col-md-6 col-sm-12">
+
                 <div class="card">
+                <a href="#">
                     <div class="card-content">
-                        <img src="@item.ImageUrl.ToFullImageUrl()" class="card-img-top img-fluid" alt="singleminded">
+                        <div class="d-flex">
+                            <img src="@item.ImageUrl.ToFullImageUrl()" class="card-img-top img-fluid p-3 mx-auto" style="width: 50%;height: 50%;" p-3 alt="singleminded">
+                            </div>
                         <div class="card-body">
                             <h5 class="card-title">@item.Name</h5>
                             <p class="card-text">
@@ -45,6 +45,10 @@
                             </p>
                         </div>
                     </div>
+                </a>
+                            <button class="btn btn-success">
+                                <i class="fa-solid fa-thumbs-up"></i> Takip Et
+                            </button>
 
                 </div>
 

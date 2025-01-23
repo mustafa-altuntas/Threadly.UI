@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
 using Threadly.UI.DTOs;
 using Threadly.UI.Models.ViewModels.Community;
@@ -6,6 +7,7 @@ using Threadly.UI.Services.Abstracts;
 
 namespace Threadly.UI.Controllers
 {
+    [Authorize]
     public class CommunitiesController : Controller
     {
 
@@ -23,15 +25,10 @@ namespace Threadly.UI.Controllers
             return View(result);
         }
 
-        //public async Task<IActionResult> Details(string id)
-        //{
-        //    var result = await _client.GetAsync<CommunityVM>($"Communities/{id}");
-
-        //    return View(result);
-        //}
 
         public IActionResult Create()
         {
+            var user = User;
             return View();
         }
 
@@ -52,18 +49,13 @@ namespace Threadly.UI.Controllers
                 foreach (var file in communityCreateVM.File)
                 {
                     var fileContent = new StreamContent(file.OpenReadStream());
-                    fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
                     formData.Add(fileContent, "File", file.FileName);
 
                 }
             }
 
-
-
-            var result = await _client.PostStreamAsync<NoDataDto> ("Communities", formData);
-
-
-
+            var result = await _client.PostStreamAsync<NoDataDto> ("Communities/AddCommunities", formData);
 
             return RedirectToAction("Index");
         }

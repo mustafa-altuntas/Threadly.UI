@@ -47,19 +47,19 @@
                             <form method="post" class="form form-horizontal">
                                 <div class="form-body">
                                     <div class="row">
-
+                                        @Html.AntiForgeryToken()
 
                                         <div class="col-md-4">
                                             <label asp-for="EmailOrUserName"></label>
                                         </div>
                                         <div class="col-md-8 form-group">
-                                            <input asp-for="EmailOrUserName" class="form-control" value="UsersUsers12@deneme.com.tr">
+                                            <input asp-for="EmailOrUserName" class="form-control" value="example@example.com">
                                         </div>
                                         <div class="col-md-4">
                                             <label asp-for="Password"></label>
                                         </div>
                                         <div class="col-md-8 form-group">
-                                            <input asp-for="Password" class="form-control" value="UsersUsers12*">
+                                            <input asp-for="Password" class="form-control" value="1234">
                                         </div>
 
                                         <div class="col-sm-12 d-flex justify-content-end">

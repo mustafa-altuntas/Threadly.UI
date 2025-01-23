@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Shared;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Threadly.UI.Constants;
 using Threadly.UI.DTOs.TokenDtos;
 using Threadly.UI.Helpers;
 using Threadly.UI.Models.Tokens;
 using Threadly.UI.Services.Abstracts;
-using Threadly.UI.Services.Concretes;
 
 namespace Threadly.UI.Middlewares
 {
@@ -21,29 +21,31 @@ namespace Threadly.UI.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
-            var tokenResponse = new TokenResponse() { AccessToken = new(), RefreshToken = new() };
-            DateTime dateValue;
 
-            tokenResponse.AccessToken.Code = CookieHelper.GetCookie(context, "AccessToken");
-            DateTime.TryParse(CookieHelper.GetCookie(context, "AccessTokenExpiration"), out dateValue);
-            if (dateValue != DateTime.MinValue)
-                tokenResponse.AccessToken.Expiration = dateValue;
-
-            tokenResponse.RefreshToken.Code = CookieHelper.GetCookie(context, "RefreshToken");
-
-            DateTime.TryParse(CookieHelper.GetCookie(context, "RefreshTokenExpiration"), out dateValue);
-            if (dateValue != DateTime.MinValue)
-                tokenResponse.RefreshToken.Expiration = dateValue;
-
-
-            if (!string.IsNullOrEmpty(tokenResponse.AccessToken.Code) && IsTokenExpired(tokenResponse.AccessToken))
+            if (!context.Request.Cookies.ContainsKey(CookieConstant.CookieName))
             {
+
+                await _next(context);
+            }
+
+            var tokenResponse = GetToken(context);
+
+
+            if (IsTokenExpired(tokenResponse.AccessToken))
+            {
+                if (IsTokenExpired(tokenResponse.RefreshToken))
+                {
+                    await context.SignOutAsync(); //Refresh token süresi dolduysa çıkış yap !!Cookie ömrü refresh token ile aynı olduğu için zan silinecek ve çıkış yapacak yani bu işlem biraz gereksiz.
+                }
+
                 if (!string.IsNullOrEmpty(tokenResponse.RefreshToken.Code))
                 {
-                    var newTokenResponse = await RefreshTokenAsync(tokenResponse.RefreshToken);
+                    // Refresh token varsa çalışır
+                    var newTokenResponse = await LoginRefreshTokenAsync(tokenResponse.RefreshToken);
                     if (newTokenResponse != null)
                     {
-                        CookieHelper.SetCookie(context, newTokenResponse);
+                        CookieHelper.SetClaims( newTokenResponse);
+                        await CookieHelper.SignInAsync(context,newTokenResponse);
                     }
                     else
                     {
@@ -54,8 +56,9 @@ namespace Threadly.UI.Middlewares
                 }
                 else
                 {
-                    RedirectToLogin(context);
-                    return;
+                    // Refresh token yoksa çalışır.
+                    await _next(context);
+
                 }
 
             }
@@ -73,16 +76,37 @@ namespace Threadly.UI.Middlewares
             context.Response.Redirect("/Auth/Login");
         }
 
-        public async Task<TokenResponse> RefreshTokenAsync(Token refreshToken)
+        async Task<TokenResponse> LoginRefreshTokenAsync(Token refreshToken)
         {
             var response = await _apiService.PostAsync<string, TokenResponse>("Users/LoginUserRefreshToken", refreshToken.Code);
 
             return response;
         }
 
-        public bool IsTokenExpired(Token token)
+         bool IsTokenExpired(Token token)
         {
             return token.Expiration < DateTime.UtcNow;
+        }
+
+
+        TokenResponse GetToken(HttpContext context)
+        {
+            TokenResponse tokenResponse = new TokenResponse { AccessToken = new(), RefreshToken = new() };
+            DateTime dateValue;
+
+            tokenResponse.AccessToken.Code = context.User.FindFirst(CookieConstant.AccessToken)?.Value;
+            DateTime.TryParse(context.User?.FindFirst(CookieConstant.AccessTokenExpiration)?.Value, out dateValue);
+            if (dateValue != DateTime.MinValue)
+                tokenResponse.AccessToken.Expiration = dateValue;
+
+            tokenResponse.RefreshToken.Code = context.User?.FindFirst(CookieConstant.RefreshToken)?.Value;
+            DateTime.TryParse(context.User?.FindFirst(CookieConstant.RefreshTokenExpiration)?.Value, out dateValue);
+            if (dateValue != DateTime.MinValue)
+                tokenResponse.RefreshToken.Expiration = dateValue;
+
+
+
+            return tokenResponse;
         }
 
 

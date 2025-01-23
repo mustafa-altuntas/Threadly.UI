@@ -14,7 +14,7 @@ namespace Threadly.UI.HttpClients
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var accessToken = CookieHelper.GetCookie(_contextAccessor.HttpContext, "AccessToken");
+            var accessToken = _contextAccessor.HttpContext.User?.FindFirst("AccessToken")?.Value;
             if(!string.IsNullOrEmpty(accessToken))
             {
                 request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol;
 using Threadly.UI.DTOs.TokenDtos;
 using Threadly.UI.Helpers;
 using Threadly.UI.Models.ViewModels.Users;
 using Threadly.UI.Models.ViewModels.Users.LoginUser;
 using Threadly.UI.Services.Abstracts;
+using Threadly.UI.DTOs;
 
 namespace Threadly.UI.Controllers
 {
@@ -18,14 +18,12 @@ namespace Threadly.UI.Controllers
             _apiService = apiService;
         }
 
-        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
 
-        [HttpGet]
         public IActionResult Register()
         {
             return View();
@@ -35,15 +33,15 @@ namespace Threadly.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(CreateUserVM createUser)
         {
- 
-            if (!ModelState.IsValid)
-            {
-                return View(createUser);
-            }
 
-            var result = await _apiService.PostAsync<CreateUserVM, CreateUserResultVM>("Users/CreateUser", createUser);
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(createUser);
+            //}
 
-            if (!result.Succeeded)
+            var result = await _apiService.PostAsync<CreateUserVM, ResponseDto<NoDataDto>>("Users/CreateUser", createUser);
+
+            if (!result.IsSuccessfull)
             {
                 foreach (var error in result.Errors)
                 {
@@ -54,11 +52,10 @@ namespace Threadly.UI.Controllers
 
             TempData["SuccessMessage"] = $"Kullanıcı başarıyla kaydedildi. \n {createUser.Email}";
             return RedirectToAction("Login");
- 
+
 
         }
 
-        [HttpGet]
         public IActionResult Login()
         {
             return View();
@@ -74,12 +71,21 @@ namespace Threadly.UI.Controllers
                 return View(loginUserVM);
             }
 
-            var result = await _apiService.PostAsync<LoginUserVM, TokenResponse>("Users/LoginUser", loginUserVM);
+            var result = await _apiService.PostAsync<LoginUserVM, ResponseDto<TokenResponse>>("Auth/LoginUser", loginUserVM);
 
-            CookieHelper.SetCookie(Request.HttpContext,result);
 
-            TempData["ToastifyMessage"] = "Kullanıcı başarıyla giriş yaptı!";
+            var signInSuccessful = await CookieHelper.SignInAsync( HttpContext, result.Data);
+
+            string message = $"\nA: {result.Data.AccessToken.Expiration} \nR: {result.Data.RefreshToken.Expiration}";
+
+            TempData["ToastifyMessage"] = signInSuccessful ? "Kullanıcı başarıyla giriş yaptı!"+ message : "Kullanıcı giriş yaparken bir hata oluştu!"+ message;
+
+
             return RedirectToAction("Index", "Home");
+
+
+            //var userId = HttpContext.User.Claims;
+            //var email = HttpContext.User.Claims.FirstOrDefault(c => c.Type.Contains("email"))!.Value;
 
         }
     }
